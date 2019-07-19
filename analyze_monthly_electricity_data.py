@@ -175,11 +175,7 @@ def main():
     #Add back into the original dataframe
     master_df.loc[:,'Electricity_Price_Transformed_Differenced_PostProcess'] = data_with_predictions['Electricity_Price_Transformed_Differenced_PostProcess']
     master_df.loc[:,'Predicted'] = data_with_predictions['Predicted']
-    
-    #Evaluate the accuracy of the results, pre un-differencing and back-transformation
-    calculate_model_accuracy_metrics(list(master_df[master_df['Predicted']==1]['Electricity_Price_Transformed_Differenced']), 
-                                    list(master_df[master_df['Predicted']==1]['Electricity_Price_Transformed_Differenced_PostProcess']))
-    
+        
     #Un-difference the data
     for i in range(1,len(master_df.index)-1):
         master_df.at[i,'Electricity_Price_Transformed']= master_df.at[i-1,'Electricity_Price_Transformed']+master_df.at[i,'Electricity_Price_Transformed_Differenced_PostProcess']
@@ -189,6 +185,11 @@ def main():
     
     #Compare the forecasted data to the real data
     print(master_df[master_df['Predicted']==1][['Date','Electricity_Price', 'Predicted_Electricity_Price']])
+    
+    #Evaluate the accuracy of the results, pre un-differencing and back-transformation
+    calculate_model_accuracy_metrics(list(master_df[master_df['Predicted']==1]['Electricity_Price']), 
+                                    list(master_df[master_df['Predicted']==1]['Predicted_Electricity_Price']))
+
     
 #Run the main script
 if __name__== "__main__":
